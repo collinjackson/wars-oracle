@@ -2,8 +2,9 @@ from flask import Flask, jsonify, Response, request, send_file
 import sys
 import os
 
-# Add parent directory to path to import modules from root
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Add current directory to path so we can import local modules
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(current_dir)
 
 from map_converter import parse_map_csv
 from unit_converter import fetch_units
