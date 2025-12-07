@@ -7,6 +7,7 @@ import { Send, Map as MapIcon, ShieldAlert, Coins, RefreshCw, Share2 } from 'luc
 import { clsx } from 'clsx';
 
 function HomeContent() {
+  const APP_VERSION = '0.0.1';
   const searchParams = useSearchParams();
   const [gameId, setGameId] = useState('');
   const [username, setUsername] = useState('');
@@ -154,6 +155,7 @@ function HomeContent() {
             <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               Wars Oracle
             </h1>
+            <span className="bg-blue-900/50 text-blue-300 text-xs px-2 py-0.5 rounded border border-blue-800 font-semibold tracking-wide">BETA</span>
           </div>
           {analysis && (
             <button 
@@ -331,6 +333,9 @@ function HomeContent() {
         </div>
 
       </div>
+      <footer className="p-4 border-t border-gray-800 text-center text-gray-600 text-xs">
+        <p>Wars Oracle Engine v{APP_VERSION} &bull; Not affiliated with Advance Wars or Nintendo.</p>
+      </footer>
     </main>
   );
 }
