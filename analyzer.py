@@ -2,7 +2,7 @@ import json
 import os
 from game_logic import get_reachable_cells, calculate_damage
 
-VERSION = "1.0.0"
+VERSION = "0.0.1"
 
 class GameAnalyzer:
     def __init__(self, map_file, units_file, rules_file, metadata_file=None):
