@@ -1,0 +1,25 @@
+openapi: 3.1.0
+info:
+  title: Wars Oracle
+  description: API for retrieving turn-based strategy game state and context.
+  version: 1.0.0
+servers:
+  - url: https://wars-oracle.vercel.app
+paths:
+  /api/game/{gameId}/context:
+    get:
+      operationId: getGameContext
+      summary: Get game strategy context
+      parameters:
+        - name: gameId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string

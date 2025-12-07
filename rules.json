@@ -1,0 +1,8 @@
+{
+  "co_stats": {},
+  "matchups": {
+    "infantry": {"infantry": 55, "mech": 45},
+    "tank": {"infantry": 75, "tank": 55}
+  }
+}
+

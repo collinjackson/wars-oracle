@@ -1,0 +1,24 @@
+# Vercel
+.vercel
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# Data Dumps (don't commit scraping results)
+*.json
+!rules.json
+!teams.json
+# We want rules.json and teams.json as config, but not game state dumps
+chasing_light_units.json
+chasing_light.json
+game_context.txt
+
+# OS
+.DS_Store
