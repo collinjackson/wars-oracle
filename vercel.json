@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/game/(.*)", "destination": "/api/index" },
+    { "source": "/api/rules/(.*)", "destination": "/api/index" }
+  ]
+}
