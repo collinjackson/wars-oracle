@@ -35,6 +35,7 @@ def fetch_units(game_id):
             if not ww_type: continue
             
             ww_units.append({
+                "id": uid,
                 "type": ww_type,
                 "position": {"x": int(u['units_x']), "y": int(u['units_y'])},
                 "playerSlot": pid_to_slot.get(int(u['units_players_id']), -1),

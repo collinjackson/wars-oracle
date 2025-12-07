@@ -16,6 +16,18 @@ paths:
           required: true
           schema:
             type: integer
+        - name: username
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The username of the player to advise (e.g. "ridiculotron").
+        - name: player_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The ID of the player to advise (alternative to username).
       responses:
         '200':
           description: OK
@@ -23,3 +35,25 @@ paths:
             text/plain:
               schema:
                 type: string
+  /api/rules/damage:
+    get:
+      operationId: getDamageRules
+      summary: Get the full unit damage matrix
+      responses:
+        '200':
+          description: JSON object of damage percentages
+          content:
+            application/json:
+              schema:
+                type: object
+  /api/rules/terrain:
+    get:
+      operationId: getTerrainRules
+      summary: Get terrain defense and movement costs
+      responses:
+        '200':
+          description: JSON object of terrain stats
+          content:
+            application/json:
+              schema:
+                type: object

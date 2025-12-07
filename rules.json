@@ -1,8 +1,60 @@
 {
-  "co_stats": {},
+  "co_stats": {
+    "Andy": { "name": "Andy", "d2d": { "attack": 100, "defense": 100 }, "cop": { "name": "Hyper Repair", "stars": 3, "attack_bonus": 10, "defense_bonus": 10, "repair": 2 }, "scop": { "name": "Hyper Upgrade", "stars": 6, "attack_bonus": 10, "defense_bonus": 10, "repair": 5, "move_bonus": 1 } },
+    "Hachi": { "name": "Hachi", "d2d": { "cost_multiplier": 0.9 }, "cop": { "name": "Barter", "stars": 3, "cost_multiplier": 0.5 }, "scop": { "name": "Merchant Union", "stars": 5, "cost_multiplier": 0.5, "deploy_anywhere": true } },
+    "Eagle": { "name": "Eagle", "d2d": { "air_attack": 115, "air_defense": 110, "naval_attack": 70, "air_fuel_burn": -2 }, "cop": { "name": "Lightning Drive", "stars": 3 }, "scop": { "name": "Lightning Strike", "stars": 9 } },
+    "Von Bolt": { "name": "Von Bolt", "d2d": { "attack": 110, "defense": 110 }, "scop": { "name": "Ex Machina", "stars": 10 } },
+    "Sami": { "name": "Sami", "d2d": { "infantry_attack": 130, "capture_rate": 1.5, "direct_attack": 90, "transport_move": 1 }, "scop": { "name": "Victory March", "stars": 8 }, "note": "Infantry move range is STANDARD (3). Bonus only applies to capture rate (1.5x). Transports get +1 move." },
+    "Max": { "name": "Max", "d2d": { "direct_attack": 120, "indirect_attack": 90, "indirect_range": -1 }, "scop": { "name": "Max Blast", "stars": 6 } },
+    "Nell": { "name": "Nell", "d2d": { "luck_max": 15 }, "scop": { "name": "Lady Luck", "stars": 6 } },
+    "Javier": { "name": "Javier", "d2d": { "defense_vs_indirect": 120, "com_tower_bonus": 10 }, "scop": { "name": "Tower of Power", "stars": 6 } },
+    "Adder": { "name": "Adder", "d2d": { "move": 0 }, "scop": { "name": "Sidewinder", "stars": 5 } },
+    "Grimm": { "name": "Grimm", "d2d": { "attack": 130, "defense": 80 }, "cop": { "name": "Knuckleduster", "stars": 3 }, "scop": { "name": "Haymaker", "stars": 6 } },
+    "Kanbei": { "name": "Kanbei", "d2d": { "attack": 120, "defense": 120, "cost_multiplier": 1.2 }, "cop": { "name": "Morale Boost", "stars": 4 }, "scop": { "name": "Samurai Spirit", "stars": 7 } }
+  },
+  "units": {
+    "infantry": { "cost": 1000, "move": 3, "type": "foot", "range": [1, 1], "ammo": 0 },
+    "mech": { "cost": 3000, "move": 2, "type": "mech", "range": [1, 1], "ammo": 3 },
+    "recon": { "cost": 4000, "move": 8, "type": "tires", "range": [1, 1], "ammo": 0 },
+    "apc": { "cost": 5000, "move": 6, "type": "tread", "range": [0, 0], "ammo": 0 },
+    "artillery": { "cost": 6000, "move": 5, "type": "tread", "range": [2, 3], "ammo": 9 },
+    "tank": { "cost": 7000, "move": 6, "type": "tread", "range": [1, 1], "ammo": 9 },
+    "antiAir": { "cost": 8000, "move": 6, "type": "tread", "range": [1, 1], "ammo": 9 },
+    "missile": { "cost": 12000, "move": 4, "type": "tires", "range": [3, 5], "ammo": 6 },
+    "rocket": { "cost": 15000, "move": 5, "type": "tires", "range": [3, 5], "ammo": 6 },
+    "mediumTank": { "cost": 16000, "move": 5, "type": "tread", "range": [1, 1], "ammo": 8 },
+    "neoTank": { "cost": 22000, "move": 6, "type": "tread", "range": [1, 1], "ammo": 9 },
+    "battleCopter": { "cost": 9000, "move": 6, "type": "air", "range": [1, 1], "ammo": 6 },
+    "transportCopter": { "cost": 5000, "move": 6, "type": "air", "range": [0, 0], "ammo": 0 },
+    "fighter": { "cost": 20000, "move": 9, "type": "air", "range": [1, 1], "ammo": 9 },
+    "bomber": { "cost": 22000, "move": 7, "type": "air", "range": [1, 1], "ammo": 9 },
+    "stealth": { "cost": 24000, "move": 6, "type": "air", "range": [1, 1], "ammo": 6 },
+    "blackBoat": { "cost": 7500, "move": 7, "type": "ship", "range": [0, 0], "ammo": 0 },
+    "lander": { "cost": 12000, "move": 6, "type": "ship", "range": [0, 0], "ammo": 0 },
+    "sub": { "cost": 20000, "move": 5, "type": "ship", "range": [1, 1], "ammo": 6 },
+    "cruiser": { "cost": 18000, "move": 6, "type": "ship", "range": [1, 1], "ammo": 9 },
+    "battleship": { "cost": 28000, "move": 5, "type": "ship", "range": [2, 6], "ammo": 9 },
+    "carrier": { "cost": 30000, "move": 5, "type": "ship", "range": [3, 8], "ammo": 9 }
+  },
+  "terrain_defense": {
+    "plain": 1, "forest": 2, "mountain": 4, "city": 3, "base": 3, "airport": 3, "port": 3, "hq": 4, "river": 0, "road": 0, "sea": 0, "shoal": 0
+  },
   "matchups": {
-    "infantry": {"infantry": 55, "mech": 45},
-    "tank": {"infantry": 75, "tank": 55}
+    "infantry": { "infantry": 55, "mech": 45, "recon": 12, "tank": 5, "mediumTank": 1, "neoTank": 1, "apc": 14, "artillery": 15, "rocket": 25, "antiAir": 5, "missile": 25, "battleCopter": 7, "transportCopter": 30 },
+    "mech": { "infantry": 65, "mech": 55, "recon": 85, "tank": 55, "mediumTank": 15, "neoTank": 15, "apc": 75, "artillery": 70, "rocket": 85, "antiAir": 65, "missile": 85, "battleCopter": 9, "transportCopter": 35 },
+    "recon": { "infantry": 70, "mech": 65, "recon": 35, "tank": 6, "mediumTank": 1, "neoTank": 1, "apc": 45, "artillery": 45, "rocket": 55, "antiAir": 4, "missile": 28, "battleCopter": 10, "transportCopter": 35 },
+    "tank": { "infantry": 75, "mech": 70, "recon": 85, "tank": 55, "mediumTank": 15, "neoTank": 15, "apc": 75, "artillery": 70, "rocket": 85, "antiAir": 65, "missile": 85, "battleCopter": 10, "transportCopter": 40, "battleship": 1, "cruiser": 5, "lander": 10, "sub": 1 },
+    "mediumTank": { "infantry": 105, "mech": 95, "recon": 105, "tank": 85, "mediumTank": 55, "neoTank": 45, "apc": 105, "artillery": 105, "rocket": 105, "antiAir": 105, "missile": 105, "battleCopter": 12, "transportCopter": 45, "battleship": 10, "cruiser": 45, "lander": 35, "sub": 10 },
+    "neoTank": { "infantry": 125, "mech": 115, "recon": 125, "tank": 105, "mediumTank": 75, "neoTank": 55, "apc": 125, "artillery": 115, "rocket": 125, "antiAir": 115, "missile": 125, "battleCopter": 22, "transportCopter": 55, "battleship": 15, "cruiser": 55, "lander": 40, "sub": 15 },
+    "artillery": { "infantry": 90, "mech": 85, "recon": 80, "tank": 70, "mediumTank": 45, "neoTank": 40, "apc": 70, "artillery": 75, "rocket": 80, "antiAir": 75, "missile": 80, "battleship": 40, "cruiser": 65, "lander": 55, "sub": 60, "blackBoat": 55 },
+    "rocket": { "infantry": 95, "mech": 90, "recon": 90, "tank": 80, "mediumTank": 55, "neoTank": 50, "apc": 80, "artillery": 80, "rocket": 85, "antiAir": 85, "missile": 90, "battleship": 55, "cruiser": 85, "lander": 60, "sub": 85, "blackBoat": 60 },
+    "antiAir": { "infantry": 105, "mech": 105, "recon": 60, "tank": 25, "mediumTank": 10, "neoTank": 5, "apc": 50, "artillery": 50, "rocket": 55, "antiAir": 45, "missile": 55, "battleCopter": 120, "transportCopter": 120, "fighter": 65, "bomber": 75, "stealth": 75 },
+    "missile": { "battleCopter": 120, "transportCopter": 120, "fighter": 100, "bomber": 100, "stealth": 100 },
+    "battleCopter": { "infantry": 75, "mech": 75, "recon": 55, "tank": 55, "mediumTank": 25, "neoTank": 20, "apc": 60, "artillery": 65, "rocket": 65, "antiAir": 6, "missile": 65, "battleCopter": 65, "transportCopter": 95, "cruiser": 5, "lander": 25, "blackBoat": 25, "sub": 25 },
+    "fighter": { "battleCopter": 100, "transportCopter": 100, "fighter": 55, "bomber": 100, "stealth": 85 },
+    "bomber": { "infantry": 110, "mech": 110, "recon": 105, "tank": 105, "mediumTank": 95, "neoTank": 90, "apc": 105, "artillery": 105, "rocket": 105, "antiAir": 10, "missile": 105, "battleship": 75, "cruiser": 85, "lander": 95, "blackBoat": 95, "sub": 95 },
+    "battleship": { "infantry": 95, "mech": 90, "recon": 90, "tank": 80, "mediumTank": 55, "neoTank": 50, "apc": 80, "artillery": 80, "rocket": 85, "antiAir": 85, "missile": 90, "battleship": 50, "cruiser": 95, "lander": 95, "sub": 95, "blackBoat": 95 },
+    "cruiser": { "battleCopter": 115, "transportCopter": 115, "fighter": 55, "bomber": 65, "stealth": 100, "sub": 90, "lander": 25, "blackBoat": 25 },
+    "sub": { "battleship": 55, "cruiser": 25, "lander": 95, "blackBoat": 95, "sub": 55, "carrier": 75 }
   }
 }
-

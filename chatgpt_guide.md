@@ -35,6 +35,18 @@ paths:
           required: true
           schema:
             type: integer
+        - name: username
+          in: query
+          required: false
+          schema:
+            type: string
+          description: The username of the player to advise (e.g. "ridiculotron").
+        - name: player_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          description: The ID of the player to advise (alternative to username).
       responses:
         '200':
           description: OK
@@ -52,6 +64,9 @@ If you don't have Plus, you can't create "Actions". However, you can still use y
 
 1.  **Manual Mode**: Visit your API URL in a browser:
     `https://wars-oracle.vercel.app/api/game/1548776/context`
+    *Optional*: Append `?username=yourname` to get advice tailored to YOU.
+    `https://wars-oracle.vercel.app/api/game/1548776/context?username=ridiculotron`
+    
 2.  **Copy-Paste**: Select All -> Copy the text response.
 3.  **Paste to ChatGPT**: "Here is my game state: [Paste]. What should I do?"
 

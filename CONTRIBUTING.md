@@ -31,5 +31,5 @@ We welcome contributions! Whether you're fixing a bug, adding a new CO definitio
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the GPLv3.
+By contributing to this project, you agree that your contributions will be licensed under the project's current license. You also grant the project maintainer the right to relicense the project, including your contributions, under different terms in the future (including proprietary licenses), without further permission.
 
