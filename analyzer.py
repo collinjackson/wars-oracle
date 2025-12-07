@@ -2,6 +2,8 @@ import json
 import os
 from game_logic import get_reachable_cells, calculate_damage
 
+VERSION = "1.0.0"
+
 class GameAnalyzer:
     def __init__(self, map_file, units_file, rules_file, metadata_file=None):
         with open(map_file) as f: self.game_map = json.load(f)
