@@ -201,10 +201,58 @@ class GameAnalyzer:
                         
         return captures
 
+    def generate_strategic_advice(self, target_slot, threats, captures):
+        """
+        Generate high-level strategic tips based on the analysis.
+        """
+        advice = []
+        
+        # Threat assessment
+        high_threats = [t for t in threats if t['damage_pct'] >= 50]
+        if high_threats:
+            advice.append(f"CRITICAL: {len(high_threats)} units are in danger of taking >50% damage. Check your {high_threats[0]['victim']['type']} at {high_threats[0]['victim']['pos']}!")
+        elif threats:
+            advice.append("Units are relatively safe, but keep an eye on enemy range.")
+        else:
+            advice.append("No immediate threats detected. You have freedom to maneuver.")
+            
+        # Capture opportunities
+        if captures:
+            props = set([c['property_type'] for c in captures])
+            advice.append(f"OPPORTUNITY: You can capture {len(captures)} properties ({', '.join(props)}) this turn.")
+            
+        # Economy check
+        econ = self.analyze_economy()
+        my_stats = econ.get(target_slot) or econ.get(str(target_slot))
+        
+        # Find main enemy (highest unit value that isn't us)
+        enemy_stats = None
+        max_val = -1
+        for slot, stats in econ.items():
+            if str(slot) != str(target_slot) and stats['unit_value'] > max_val:
+                max_val = stats['unit_value']
+                enemy_stats = stats
+        
+        if my_stats and enemy_stats:
+            val_diff = my_stats['unit_value'] - enemy_stats['unit_value']
+            if val_diff > 20000:
+                advice.append("You have a significant material advantage. Press the attack.")
+            elif val_diff < -20000:
+                advice.append("You are behind in material. Play defensively and conserve units.")
+            else:
+                advice.append("Material is even. Tactical efficiency will decide the outcome.")
+                
+        return advice
+
     def get_full_analysis(self, target_slot):
+        threats = self.analyze_threats(target_slot)
+        captures = self.analyze_captures(target_slot)
+        advice = self.generate_strategic_advice(target_slot, threats, captures)
+        
         return {
             "economy": self.analyze_economy(),
-            "threats": self.analyze_threats(target_slot),
-            "captures": self.analyze_captures(target_slot)
+            "threats": threats,
+            "captures": captures,
+            "advice": advice
         }
 

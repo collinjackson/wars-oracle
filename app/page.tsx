@@ -1,16 +1,36 @@
-'use client';
-
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useChat } from '@ai-sdk/react';
-import { Send, Map as MapIcon, ShieldAlert, Coins, RefreshCw } from 'lucide-react';
+import { Send, Map as MapIcon, ShieldAlert, Coins, RefreshCw, Share2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams();
   const [gameId, setGameId] = useState('');
   const [username, setUsername] = useState('');
   const [analysis, setAnalysis] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [players, setPlayers] = useState<any[]>([]);
+  const [isGameLoaded, setIsGameLoaded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // Initialize from URL params
+  useEffect(() => {
+    const urlGameId = searchParams.get('game_id') || searchParams.get('id');
+    const urlUsername = searchParams.get('username');
+
+    if (urlGameId) {
+      setGameId(urlGameId);
+      // Auto-load if ID exists
+      loadPlayers(urlGameId).then((success) => {
+        if (success && urlUsername) {
+          setUsername(urlUsername);
+          fetchAnalysis(urlGameId, urlUsername);
+        }
+      });
+    }
+  }, []);
 
   const { messages, input, handleInputChange, handleSubmit, setMessages } = useChat({
     api: '/api/chat',
@@ -22,20 +42,22 @@ export default function Home() {
     }
   });
 
-  const [players, setPlayers] = useState<any[]>([]);
-  const [isGameLoaded, setIsGameLoaded] = useState(false);
-
-  const loadPlayers = async () => {
-    if (!gameId) return;
+  const loadPlayers = async (overrideId?: string) => {
+    const targetIdRaw = overrideId || gameId;
+    if (!targetIdRaw) return false;
+    
     setLoading(true);
     setError('');
-    setAnalysis(null);
-    setMessages([]);
-    setPlayers([]);
-    setUsername('');
-    setIsGameLoaded(false);
+    // Only reset state if manually clicking load, not initial hydration
+    if (!overrideId) {
+      setAnalysis(null);
+      setMessages([]);
+      setPlayers([]);
+      setUsername('');
+      setIsGameLoaded(false);
+    }
 
-    let targetId = gameId.trim();
+    let targetId = targetIdRaw.trim();
     const urlMatch = targetId.match(/games_id=(\d+)/);
     if (urlMatch) {
       targetId = urlMatch[1];
@@ -48,8 +70,10 @@ export default function Home() {
       const data = await res.json();
       setPlayers(data);
       setIsGameLoaded(true);
+      return true;
     } catch (err: any) {
       setError(err.message);
+      return false;
     } finally {
       setLoading(false);
     }
@@ -59,21 +83,22 @@ export default function Home() {
     const user = e.target.value;
     setUsername(user);
     if (user) {
-        fetchAnalysis(user);
+        fetchAnalysis(undefined, user);
     } else {
         setAnalysis(null);
         setMessages([]);
     }
   };
 
-  const fetchAnalysis = async (targetUsername?: string) => {
+  const fetchAnalysis = async (overrideId?: string, targetUsername?: string) => {
     const userToFetch = targetUsername || username;
-    if (!gameId || !userToFetch) return;
+    const idToFetch = overrideId || gameId;
+    
+    if (!idToFetch || !userToFetch) return;
     setLoading(true);
     setError('');
     
-    // Extract ID if URL is pasted (redundant but safe)
-    let targetId = gameId.trim();
+    let targetId = idToFetch.trim();
     const urlMatch = targetId.match(/games_id=(\d+)/);
     if (urlMatch) {
       targetId = urlMatch[1];
@@ -107,14 +132,36 @@ export default function Home() {
     }
   };
 
+  const handleShare = () => {
+    if (!window) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set('game_id', gameId);
+    if (username) url.searchParams.set('username', username);
+    
+    navigator.clipboard.writeText(url.toString());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <main className="min-h-screen bg-gray-900 text-gray-100 flex flex-col">
       <header className="bg-gray-800 border-b border-gray-700 p-4">
-        <div className="container mx-auto flex items-center gap-2">
-          <span className="text-2xl">🔮</span>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Wars Oracle
-          </h1>
+        <div className="container mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🔮</span>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Wars Oracle
+            </h1>
+          </div>
+          {analysis && (
+            <button 
+              onClick={handleShare}
+              className="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition bg-gray-700/50 px-3 py-1.5 rounded-lg border border-gray-600 hover:border-gray-500"
+            >
+              <Share2 className="w-4 h-4" />
+              {copied ? 'Copied Link!' : 'Share Analysis'}
+            </button>
+          )}
         </div>
       </header>
 
@@ -136,7 +183,7 @@ export default function Home() {
                   className="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none text-sm"
                 />
                 <button 
-                  onClick={loadPlayers}
+                  onClick={() => loadPlayers()}
                   disabled={loading}
                   className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-medium transition"
                 >
@@ -193,10 +240,26 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Threats Card */}
+              {/* Strategic Advice Card */}
+              {analysis.advice && analysis.advice.length > 0 && (
+                <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-blue-400">
+                    <ShieldAlert className="w-5 h-5" /> Strategic Advice
+                  </h3>
+                  <ul className="space-y-2">
+                    {analysis.advice.map((tip: string, idx: number) => (
+                      <li key={idx} className="bg-blue-900/30 p-2 rounded border border-blue-800/50 text-sm text-blue-200">
+                        {tip}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Threats Card (Collapsed/Secondary) */}
               <div className="bg-gray-800 rounded-xl p-4 border border-gray-700">
                 <h3 className="flex items-center gap-2 text-lg font-semibold mb-3 text-red-400">
-                  <ShieldAlert className="w-5 h-5" /> Threats
+                  <ShieldAlert className="w-5 h-5" /> Threat Detail
                 </h3>
                 {analysis.threats && analysis.threats.length > 0 ? (
                   <ul className="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -267,5 +330,13 @@ export default function Home() {
 
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">Loading Oracle...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }
