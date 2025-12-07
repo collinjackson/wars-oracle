@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wars Oracle Generator</title>
+    <!-- Crystal Ball Emoji Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
+    <style>
+        body { font-family: system-ui, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; background: #1a1a1a; color: #eee; }
+        input, button, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 6px; border: 1px solid #444; background: #333; color: white; }
+        button { background: #0070f3; cursor: pointer; font-weight: bold; border: none; }
+        button:hover { background: #005bb5; }
+        textarea { width: 100%; height: 300px; background: #222; color: #0f0; font-family: monospace; border: 1px solid #444; padding: 10px; margin-top: 10px; }
+        .hidden { display: none; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #aaa; }
+    </style>
+</head>
+<body>
+    <h1>Wars Oracle 🔮</h1>
+    <p>Generate a strategic briefing for AI analysis.</p>
+    
+    <label for="gameId">AWBW Game Link or ID</label>
+    <input type="text" id="gameId" placeholder="Paste link or ID (e.g. 1548776)" oninput="handleInput()">
+    
+    <label for="username">Your Identity</label>
+    <select id="username">
+        <option value="">-- Select Player --</option>
+        <option value="" disabled>Enter Game ID first...</option>
+    </select>
+    
+    <button onclick="generateContext()">Generate Briefing</button>
+    
+    <div id="result" class="hidden">
+        <label>Context (Ready to Paste)</label>
+        <textarea id="output" readonly></textarea>
+        <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <script>
+        let fetchTimeout;
+
+        function handleInput() {
+            const input = document.getElementById('gameId');
+            let val = input.value.trim();
+            
+            const match = val.match(/games_id=(\d+)/) || val.match(/^(\d+)$/);
+            if (match) {
+                const id = match[1];
+                if (val !== id) {
+                    // Auto-format to ID if it was a link
+                }
+                clearTimeout(fetchTimeout);
+                fetchTimeout = setTimeout(() => fetchPlayers(id), 300);
+            }
+        }
+
+        async function fetchPlayers(gameId) {
+            const select = document.getElementById('username');
+            select.innerHTML = '<option>Loading players...</option>';
+            
+            try {
+                const res = await fetch(`/api/game/${gameId}/players`);
+                if (!res.ok) throw new Error('Failed to fetch players');
+                const players = await res.json();
+                
+                select.innerHTML = '<option value="">-- Spectator (Neutral) --</option>';
+                players.forEach(p => {
+                    if (p.eliminated) return; 
+                    
+                    const opt = document.createElement('option');
+                    opt.value = p.username;
+                    opt.textContent = `${p.username} (${p.co}) - Team ${p.team}`;
+                    select.appendChild(opt);
+                });
+            } catch (err) {
+                console.error(err);
+                select.innerHTML = '<option value="">Error loading players (Check ID)</option>';
+            }
+        }
+
+        async function generateContext() {
+            const inputVal = document.getElementById('gameId').value;
+            const match = inputVal.match(/games_id=(\d+)/) || inputVal.match(/^(\d+)$/);
+            if (!match) return alert("Please enter a valid Game ID or Link");
+            const gameId = match[1];
+            
+            const username = document.getElementById('username').value;
+            const btn = document.querySelector('button');
+            
+            btn.disabled = true;
+            btn.textContent = "Generating...";
+            
+            let url = `/api/game/${gameId}/context`;
+            if (username) url += `?username=${encodeURIComponent(username)}`;
+            
+            try {
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(await res.text());
+                const text = await res.text();
+                
+                document.getElementById('output').value = text;
+                document.getElementById('result').classList.remove('hidden');
+            } catch (err) {
+                alert("Error: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Generate Briefing";
+            }
+        }
+        
+        function copyToClipboard() {
+            const copyText = document.getElementById("output");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+            navigator.clipboard.writeText(copyText.value);
+            alert("Copied to clipboard!");
+        }
+        
+        const initVal = document.getElementById('gameId').value;
+        if(initVal && initVal.match(/^\d+$/)) fetchPlayers(initVal);
+    </script>
+</body>
+</html>
