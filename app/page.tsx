@@ -35,7 +35,7 @@ function HomeContent() {
     }
   }, []);
 
-  const { messages, input, handleInputChange, handleSubmit, setMessages } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, setMessages, isLoading } = useChat({
     api: '/api/chat',
     body: {
       data: {
@@ -317,17 +317,17 @@ function HomeContent() {
           <form onSubmit={handleSubmit} className="p-4 bg-gray-900 border-t border-gray-700 flex gap-2">
             <input
               className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700"
-              value={input}
+              value={input || ''}
               onChange={handleInputChange}
               placeholder={analysis ? "Ask about strategy..." : "Load a game first..."}
               disabled={!analysis}
             />
             <button 
               type="submit"
-              disabled={!analysis || !input?.trim()}
+              disabled={!analysis || !input?.trim() || isLoading}
               className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 rounded-lg transition flex items-center"
             >
-              <Send className="w-5 h-5" />
+              {isLoading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </form>
         </div>
