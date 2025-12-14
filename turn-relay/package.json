@@ -1,0 +1,26 @@
+{
+  "name": "awbw-turn-relay",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AWBW turn relay (Cloud Run + Firestore)",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/api/turn-relay.js",
+    "dev": "tsx api/turn-relay.ts"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^7.12.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@types/ws": "^8.5.12",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.3"
+  }
+}
+
